@@ -1,0 +1,2 @@
+Multishot_dbWhitelist = {
+}
