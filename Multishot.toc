@@ -1,11 +1,12 @@
-## Interface: 90100
-## Title: Multishot
-## Author: dlui & dridzt, melcaracara
-## Version: 3.2.1
+## Interface: 90105
+## Title: Multishot Fan Update
+## Author: dlui & dridzt (Original), Nukme (Maintainer)
+## Version: 9.1.5.1
 ## Notes: Takes screenshots of memorable events in your World of Warcraft career.
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3
 ## SavedVariables: MultishotConfig
 ## SavedVariablesPerCharacter: MultishotPlayerScreens
+
 
 #@no-lib-strip@
 libs\data.xml
