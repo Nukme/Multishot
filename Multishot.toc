@@ -10,8 +10,6 @@
 ## SavedVariables: MultishotConfig
 ## SavedVariablesPerCharacter: MultishotPlayerScreens
 
-
-
 #@no-lib-strip@
 libs\data.xml
 #@end-no-lib-strip@
