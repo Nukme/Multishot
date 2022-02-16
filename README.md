@@ -21,5 +21,5 @@ Also, feel free to open up an [issue](https://github.com/Nukme/Multishot/issues)
 - Add option to auto-screenshot after obtaining a Legendary item.
 - Remove the functionality to auto-screenshot after killing a rare mob.
 - Re-write the logic to auto-screenshot after killing a boss. Instead of examing the NPC_IDs upon unit deaths, the addon now takes in-game event `ENCOUNTER_END return 1` as the mark of the end of a boss fight.
-- Record boss fights using ENCOUNTER_IDs instead of NPC_IDs.
-- Many lua error fixes along the game expansions.
+- Record boss kills using ENCOUNTER_IDs instead of NPC_IDs.
+- Lua error fixes along the game expansions.
