@@ -338,6 +338,9 @@ end
 function Multishot:OnInitialize()
   LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot", dataOptions)
   Multishot.ConfigPanel = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot")
+  self:RegisterChatCommand("multishot", function()
+    InterfaceOptionsFrame_OpenToCategory(Multishot.ConfigPanel)
+  end)
   local version = GetAddOnMetadata("Multishot", "Version")
   local versionText = "|cFF808080 "..version .."|r"
   Multishot.Version = Multishot.ConfigPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
