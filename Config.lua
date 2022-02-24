@@ -337,11 +337,11 @@ end
 
 function Multishot:OnInitialize()
   LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot", dataOptions)
-  Multishot.PrefPane = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot")
+  Multishot.ConfigPanel = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot")
   local version = GetAddOnMetadata("Multishot", "Version")
   local versionText = "|cFF808080 "..version .."|r"
-  Multishot.Version = Multishot.PrefPane:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
-  Multishot.Version:SetPoint("TOPRIGHT", Multishot.PrefPane, "TOPRIGHT", -15, -15)
+  Multishot.Version = Multishot.ConfigPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+  Multishot.Version:SetPoint("TOPRIGHT", Multishot.ConfigPanel, "TOPRIGHT", -15, -15)
 	Multishot.Version:SetText(versionText)
   setmetatable(MultishotConfig, {__index = dataDefaults})
   MultishotConfig.history = MultishotConfig.history
