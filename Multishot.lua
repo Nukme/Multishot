@@ -68,7 +68,7 @@ function Multishot:CHALLENGE_MODE_COMPLETED(strEvent)
 end
 
 function Multishot:ADDON_LOADED(strEvent, subev)
-	if not MultishotConfig.challengemode then return end
+	if not MultishotConfig.mythicpluscompletion then return end
 	if subev == "Blizzard_ChallengesUI" then
 		hooksecurefunc(ChallengeModeCompleteBanner,"PlayBanner",function()
 			self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, subev)
