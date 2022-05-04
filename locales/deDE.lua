@@ -62,3 +62,6 @@ $r = realm
 $d = datum
 $b = line change]=] -- Needs review
 L["watermarktest"] = "Anzeige Wasserzeichen" -- Needs review
+
+-- Added by Nukme
+--L["mythicpluscompletion"] = ""

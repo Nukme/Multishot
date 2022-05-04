@@ -56,3 +56,6 @@ L["watermarkfontsize"] = "設定浮水印字型大小"
 L["watermarkformat"] = "設定浮水印文字"
 L["watermarkformattext"] = "$n =角色 $c = 職業 $l = 等級 $z = 地區 $r = 伺服器 $d = 日期 $b = 換行"
 L["watermarktest"] = "顯示浮水印"
+
+-- Added by Nukme
+--L["mythicpluscompletion"] = ""

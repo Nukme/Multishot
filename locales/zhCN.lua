@@ -56,3 +56,6 @@ L["watermarkfontsize"] = "设置水印字体大小"
 L["watermarkformat"] = "设置水印文字"
 L["watermarkformattext"] = "$n =角色 $c = 职业 $l = 等级 $z = 地区 $r = 服务器 $d = 日期 $b = 换行"
 L["watermarktest"] = "显示水印"
+
+-- Added by Nukme
+L["mythicpluscompletion"] = "大秘境完成"

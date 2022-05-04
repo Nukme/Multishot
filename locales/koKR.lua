@@ -62,3 +62,6 @@ $r = 서버
 $d = 날짜
 $b = 라인 변경]=]
 L["watermarktest"] = "워터마크 표시(토글)" -- Needs review
+
+-- Added by Nukme
+--L["mythicpluscompletion"] = ""

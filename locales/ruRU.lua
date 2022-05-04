@@ -62,3 +62,6 @@ $r = игровой мир
 $d = дата
 $b = линия изменения]=]
 L["watermarktest"] = "Watermark display (toggle)" -- Requires localization
+
+-- Added by Nukme
+--L["mythicpluscompletion"] = ""

@@ -64,6 +64,7 @@ local dataDefaults = {
   --guildlevelup = true,
   guildachievement = true,
   challengemode = true,
+  mythicpluscompletion = true,
   battleground = true,
   arena = true,
   history = {},
@@ -200,6 +201,17 @@ local dataOptions = {
       end,
       set = function(_, v)
         MultishotConfig.legendaryloot = v
+      end
+    },
+    mythicpluscompletion = {
+      order = 12,
+      type = "toggle",
+      name = L["mythicpluscompletion"],
+      get = function()
+        return MultishotConfig.mythicpluscompletion
+      end,
+      set = function(_, v)
+        MultishotConfig.mythicpluscompletion = v
       end
     },
     --------------------------------------------------------------------------------

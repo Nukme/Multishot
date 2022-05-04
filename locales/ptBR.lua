@@ -62,3 +62,6 @@ $r = realm
 $d = date
 $b = line change]=] -- Requires localization
 L["watermarktest"] = "Watermark display (toggle)" -- Requires localization
+
+-- Added by Nukme
+--L["mythicpluscompletion"] = ""
