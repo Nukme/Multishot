@@ -66,6 +66,7 @@ end
 --[[ **********************************************************************
         Configuration Default Values
      **********************************************************************]]
+     
 local defaults = {
     global = {
         levelup = true,
@@ -113,6 +114,7 @@ local defaults_history ={
 --[[ **********************************************************************
         Configuration Options Table
      **********************************************************************]]
+
 local introOptions = {
     type = "group",
     name = "Multishot",
@@ -705,6 +707,7 @@ end
 function Multishot:RegisterConfigs()
     -- General Settings Defaults DBObj
     self.configDB = LibStub("AceDB-3.0"):New("MultishotConfigDB", defaults, true)
+
     -- Encounter History Defaults DBObj
     self.historyDB = LibStub("AceDB-3.0"):New("MultishotHistoryDB", defaults_history, true)
 end

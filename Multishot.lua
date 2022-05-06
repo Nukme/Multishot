@@ -24,7 +24,7 @@ function Multishot:OnEnable()
     self:RegisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
     self:RegisterEvent("ENCOUNTER_END")
     self:RegisterEvent("SCREENSHOT_FAILED", "Debug")
-    --self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    -- self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     if Multishot.configDB.global.timeLineEnable then
         self.timeLineTimer = self:ScheduleRepeatingTimer("TimeLineProgress", 5)
         timeLineStart, timeLineElapsed = GetTime(), 0
@@ -212,7 +212,8 @@ function Multishot:ENCOUNTER_END(strEvent, ...)
         else
             solo = true
         end
-        if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or (inParty and Multishot.configDB.global.groupstatus["2party"]) or
+        if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or
+            (inParty and Multishot.configDB.global.groupstatus["2party"]) or
             (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then
             return
         end
@@ -254,10 +255,10 @@ function Multishot:SCREENSHOT_SUCCEEDED(strEvent)
     self:UIToggle(true)
     self:RefreshWatermark(false)
     self:UnregisterEvent("SCREENSHOT_SUCCEEDED")
-	self:UnregisterEvent("SCREENSHOT_FAILED")
 end
 
 -- not sure whether the persistent watermark is caused by this event. put here as a fail-safe.
+--[[
 function Multishot:SCREENSHOT_FAILED(strEvent)
     if Multishot.configDB.global.debug then
         self:Print(strEvent)
@@ -280,12 +281,17 @@ function Multishot:SCREENSHOT_FAILED(strEvent)
     self:UnregisterEvent("SCREENSHOT_SUCCEEDED")
 	self:UnregisterEvent("SCREENSHOT_FAILED")
 end
+]]
 
 function Multishot:RefreshWatermark(show)
     if not show then -- passed in false
-        Multishot.watermarkFrame:Hide()
+        local try = 0
+        while Multishot.watermarkFrame:IsShown() and try < 100 do
+            Multishot.watermarkFrame:Hide()
+            try = try + 1
+        end
         if Multishot.configDB.global.debug then
-            self:Print("HIDE_WATERMARK")
+            self:Print("HIDE_WATERMARK " .. try .. " attempts(s)")
         end
         return
     end
@@ -311,7 +317,8 @@ function Multishot:RefreshWatermark(show)
     text = text:gsub("$d", tdate)
     text = text:gsub("$b", "\n")
 
-    Multishot.watermarkFrame.Text:SetFont(Multishot.configDB.global.watermarkfont, Multishot.configDB.global.watermarkfontsize, "OUTLINE")
+    Multishot.watermarkFrame.Text:SetFont(Multishot.configDB.global.watermarkfont,
+        Multishot.configDB.global.watermarkfontsize, "OUTLINE")
     Multishot.watermarkFrame.Text:SetFormattedText("%s%s%s", YELLOW_FONT_COLOR_CODE, text, FONT_COLOR_CODE_CLOSE)
 
     Multishot.watermarkFrame:Show()
@@ -349,8 +356,8 @@ end
 
 function Multishot:CustomScreenshot(strDebug)
     self:Debug(strDebug)
-	self:RegisterEvent("SCREENSHOT_SUCCEEDED")
-	self:RegisterEvent("SCREENSHOT_FAILED")
+    self:RegisterEvent("SCREENSHOT_SUCCEEDED")
+    self:RegisterEvent("SCREENSHOT_FAILED")
     if Multishot.configDB.global.charpane and not PaperDollFrame:IsVisible() then
         ToggleCharacter("PaperDollFrame")
         if not PaperDollFrame:IsVisible() then
@@ -405,6 +412,7 @@ function Multishot:Debug(strMessage)
     if strMessage == "SCREENSHOT_FAILED" then
         self:UIToggle(true)
         self:RefreshWatermark(false)
+        self:UnregisterEvent("SCREENSHOT_FAILED")
     end
     if Multishot.configDB.global.debug then
         self:Print(strMessage)
