@@ -64,4 +64,20 @@ $b = 라인 변경]=]
 L["watermarktest"] = "워터마크 표시(토글)" -- Needs review
 
 -- Added by Nukme
---L["mythicpluscompletion"] = ""
+-- L["Auto-Screenshot Management Addon\n\n"] = ""
+-- L["Version"] = ""
+-- L["Author"] = ""
+-- L["Github Repo"] = ""
+-- L["NGA Feedback"] = ""
+-- L["mythicpluscompletion"] = ""
+-- L["General Settings"] = ""
+-- L["Difficulty Settings"] = ""
+-- L["DifficultyID reference webpage:"] = ""
+-- L["PARTY"] = ""
+-- L["RAID"] = ""
+-- L["SCENARIO"] = ""
+-- L["PVP"] = ""
+-- L["NONE"] = ""
+-- L["Reset Character Kill History"] = ""
+-- L["Reset All General Settings"]  = ""
+-- L["Click to Reset"] = ""

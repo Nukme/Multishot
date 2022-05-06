@@ -291,7 +291,7 @@ function Multishot:RefreshWatermark(show)
             try = try + 1
         end
         if Multishot.configDB.global.debug then
-            self:Print("HIDE_WATERMARK " .. try .. " attempts(s)")
+            self:Print("HIDE_WATERMARK " .. try .. " attempt(s)")
         end
         return
     end
@@ -357,7 +357,6 @@ end
 function Multishot:CustomScreenshot(strDebug)
     self:Debug(strDebug)
     self:RegisterEvent("SCREENSHOT_SUCCEEDED")
-    self:RegisterEvent("SCREENSHOT_FAILED")
     if Multishot.configDB.global.charpane and not PaperDollFrame:IsVisible() then
         ToggleCharacter("PaperDollFrame")
         if not PaperDollFrame:IsVisible() then
