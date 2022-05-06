@@ -169,8 +169,8 @@ function Multishot:COMBAT_LOG_EVENT_UNFILTERED(strEvent, ...)
     if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or (inParty and Multishot.configDB.global.groupstatus["2party"]) or (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then return end
     if difficultyID and not Multishot.configDB.global.difficulty[difficultyID] then return end
     if not (Multishot_dbWhitelist[currentId] or Multishot.BossID[currentId] or Multishot.RareID[currentId]) or Multishot_dbBlacklist[currentId] then return end
-    if Multishot.configDB.global.firstkill and Multishot.configDB.char.history[UnitName("player") .. currentId] then return end
-    Multishot.configDB.char.history[player .. currentId] = true
+    if Multishot.configDB.global.firstkill and Multishot.historyDB.char.history[UnitName("player") .. currentId] then return end
+    Multishot.historyDB.char.history[player .. currentId] = true
     isDelayed = currentId  --FLAG
     if UnitIsDead("player") then
       self:PLAYER_REGEN_ENABLED(strType)
@@ -222,10 +222,10 @@ function Multishot:ENCOUNTER_END(strEvent, ...)
         if Multishot_dbBlacklist[encoutnerID] then
             return
         end
-        if Multishot.configDB.global.firstkill and Multishot.configDB.char.history[player .. encoutnerID] then
+        if Multishot.configDB.global.firstkill and Multishot.historyDB.char.history[player .. encoutnerID] then
             return
         end
-        Multishot.configDB.char.history[player .. encoutnerID] = true
+        Multishot.historyDB.char.history[player .. encoutnerID] = true
         isDelayed = encoutnerID -- FLAG
         if isDelayed then
             self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. isDelayed)

@@ -7,7 +7,7 @@
 ## X-Repository: https://github.com/Nukme/Multishot
 ## X-NGA_Feedback: https://bbs.nga.cn/read.php?tid=7534350
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3
-## SavedVariables: MultishotConfigDB
+## SavedVariables: MultishotConfigDB, MultishotHistoryDB
 ## SavedVariablesPerCharacter: MultishotPlayerScreens
 
 #@no-lib-strip@

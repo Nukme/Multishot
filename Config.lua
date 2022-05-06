@@ -93,7 +93,6 @@ local defaults = {
         mythicpluscompletion = true,
         battleground = true,
         arena = true,
-        -- history = {},
         delay3 = 20,
         timeLineEnable = false,
         -- garissonbuild = true,
@@ -102,9 +101,12 @@ local defaults = {
         watermarkanchor = "TOP",
         watermarkfont = STANDARD_TEXT_FONT,
         watermarkfontsize = CHAT_FONT_HEIGHTS[3]
-    },
+    }
+}
+
+local defaults_history ={
     char = {
-        history = {},
+        history = {}, 
     }
 }
 
@@ -573,7 +575,7 @@ local generalOptions = {
             type = "execute",
             name = L["reset"],
             func = function()
-                Multishot.configDB.char.history = {}
+                Multishot.historyDB.char.history = {}
             end
         },
         --------------------------------------------------------------------------------
@@ -692,22 +694,12 @@ function Multishot:OnInitialize()
     self:RegisterChatCommand("multishot", function()
         InterfaceOptionsFrame_OpenToCategory(Multishot.ConfigPanel)
     end)
-
-    --[[
-    setmetatable(Multishot.configDB.global, {
-        __index = dataDefaults
-    })
-
-    -- I believe this is to read saved info into game
-    
-    Multishot.configDB.global.history = Multishot.configDB.global.history
-    Multishot.configDB.global.difficulty = Multishot.configDB.global.difficulty
-    Multishot.configDB.global.groupstatus = Multishot.configDB.global.groupstatus
-    ]]
 end
 
 function Multishot:RegisterConfigs()
     self.configDB = LibStub("AceDB-3.0"):New("MultishotConfigDB", defaults, true)
+
+    self.historyDB = LibStub("AceDB-3.0"):New("MultishotHistoryDB", defaults_history, true)
 end
 
 function Multishot:RegisterMenus()
