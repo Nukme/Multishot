@@ -411,7 +411,6 @@ function Multishot:Debug(strMessage)
     if strMessage == "SCREENSHOT_FAILED" then
         self:UIToggle(true)
         self:RefreshWatermark(false)
-        self:UnregisterEvent("SCREENSHOT_FAILED")
     end
     if Multishot.configDB.global.debug then
         self:Print(strMessage)
