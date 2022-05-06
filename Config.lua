@@ -27,9 +27,6 @@ end
 -- categorized by instance type  Nukme@20220505
 local diffcap = 300
 function GetDifficulties(_T)
-    -- local diffs = {
-    --     [0] = _G.NONE
-    -- }
     local diffs = {}
     for i = 1, diffcap do
         local name, type = GetDifficultyInfo(i)
@@ -40,61 +37,77 @@ function GetDifficulties(_T)
     return diffs
 end
 
-function getDiffDefaults(_T)
-    -- local defaults = {
-    --     [0] = true
-    -- }
-    local defaults = {}
+function GetDiffDefaults()
+    local pre_selected = {
+        [8] = true,     -- Mythic Keystone
+        [1] = true,     -- Normal Dungeon
+        [2] = true,     -- Heroic Dungeon
+        [23] = true,    -- Mythic Dungeon
+        [24] = true,    -- Timewalking Dungeon
+        [14] = true,    -- Normal Raid
+        [15] = true,    -- Heroic Raid
+        [16] = true,    -- Mythic Raid
+        [33] = true,    -- Timewaling Raid
+    }
+    local diff_defaults = {}
     for i = 1, diffcap do
-        local name, type = GetDifficultyInfo(i)
-        if name and type == _T then
-            defaults[i] = true
+        local name = GetDifficultyInfo(i)
+        if name then
+            if pre_selected[i] == true then
+                diff_defaults[i] = true
+            else
+                diff_defaults[i] = false
+            end
         end
     end
-    return defaults
+    return diff_defaults
 end
 
-local dataDefaults = {
-    levelup = true,
-    legendaryloot = true,
-    achievement = true,
-    groupstatus = {
-        ["1solo"] = true,
-        ["2party"] = true,
-        ["3raid"] = true
-    },
-    repchange = true,
-    delay1 = 1.2,
-    delay2 = 2,
-    debug = false,
-    trade = true,
-    firstkill = false,
-    difficulty = getDiffDefaults(),
-    close = false,
-    uihide = false,
-    played = false,
-    charpane = false,
-    -- guildlevelup = true,
-    guildachievement = true,
-    challengemode = true,
-    mythicpluscompletion = true,
-    battleground = true,
-    arena = true,
-    history = {},
-    delay3 = 20,
-    timeLineEnable = false,
-    -- garissonbuild = true,
-    watermark = false,
-    watermarkformat = "$n($l) $c $b$z - $d$b$r",
-    watermarkanchor = "TOP",
-    watermarkfont = STANDARD_TEXT_FONT,
-    watermarkfontsize = CHAT_FONT_HEIGHTS[3]
+--[[ **********************************************************************
+        Configuration Default Values
+     **********************************************************************]]
+local defaults = {
+    global = {
+        levelup = true,
+        legendaryloot = true,
+        achievement = true,
+        groupstatus = {
+            ["1solo"] = true,
+            ["2party"] = true,
+            ["3raid"] = true
+        },
+        repchange = true,
+        delay1 = 1.2,
+        delay2 = 2,
+        debug = false,
+        trade = true,
+        firstkill = false,
+        difficulty = GetDiffDefaults(),
+        close = false,
+        uihide = false,
+        played = false,
+        charpane = false,
+        -- guildlevelup = true,
+        guildachievement = true,
+        challengemode = true,
+        mythicpluscompletion = true,
+        battleground = true,
+        arena = true,
+        history = {},
+        delay3 = 20,
+        timeLineEnable = false,
+        -- garissonbuild = true,
+        watermark = false,
+        watermarkformat = "$n($l) $c $b$z - $d$b$r",
+        watermarkanchor = "TOP",
+        watermarkfont = STANDARD_TEXT_FONT,
+        watermarkfontsize = CHAT_FONT_HEIGHTS[3]
+    }
 }
 
 --[[ **********************************************************************
         Configuration Options Table
      **********************************************************************]]
-
 local introOptions = {
     type = "group",
     name = "Multishot",
@@ -102,24 +115,23 @@ local introOptions = {
         intro = {
             order = 0,
             type = "description",
-            name = "Manages your screenshots.\n\n",
+            name = L["Auto-Screenshot Management Addon\n\n"]
         },
         version = {
             order = 1,
             type = "description",
-            -- name = string.format("%30s  %-40s", "|cFFFFD700Version|r", GetAddOnMetadata("Multishot", "Version"))
-            name = string.format("%s\n    %s\n\n","|cFFFFD700Version|r", GetAddOnMetadata("Multishot", "Version"))
+            name = string.format("%s\n    %s\n\n", "|cFFFFD700" .. L["Version"] .. "|r",
+                GetAddOnMetadata("Multishot", "Version"))
         },
         author = {
             order = 2,
             type = "description",
-            -- name = string.format("%30s  %-40s", "|cFFFFD700Author|r", "dlui&dridzt (original), Nukme")
-            name = string.format("%s\n    %s\n\n", "|cFFFFD700Author|r", "dlui&dridzt (original), Nukme")
+            name = string.format("%s\n    %s\n\n", "|cFFFFD700" .. L["Author"] .. "|r", "dlui&dridzt (original), Nukme")
         },
         repo = {
             order = 3,
             type = "input",
-            name = "Github Repo",
+            name = L["Github Repo"],
             width = "double",
             get = function()
                 return GetAddOnMetadata("Multishot", "X-Repository")
@@ -128,18 +140,18 @@ local introOptions = {
         feedback = {
             order = 4,
             type = "input",
-            name = "NGA Feedback",
+            name = L["NGA Feedback"],
             width = "double",
             get = function()
                 return GetAddOnMetadata("Multishot", "X-NGA_Feedback")
             end
-        },
+        }
     }
 }
 
 local generalOptions = {
     type = "group",
-    name = "General Settings",
+    name = L["General Settings"],
     args = {
         --------------------------------------------------------------------------------
         intro = {
@@ -152,10 +164,10 @@ local generalOptions = {
             type = "toggle",
             name = L["levelups"],
             get = function()
-                return MultishotConfig.levelup
+                return Multishot.configDB.global.levelup
             end,
             set = function(_, v)
-                MultishotConfig.levelup = v
+                Multishot.configDB.global.levelup = v
             end
         },
         --[[
@@ -163,18 +175,18 @@ local generalOptions = {
       order = 2, 
       type = "toggle",
       name = L["guildlevelups"],
-      get = function() return MultishotConfig.guildlevelup end,
-      set = function(_,v) MultishotConfig.guildlevelup = v end },
+      get = function() return Multishot.configDB.global.guildlevelup end,
+      set = function(_,v) Multishot.configDB.global.guildlevelup = v end },
 	  --]]
         achievements = {
             order = 3,
             type = "toggle",
             name = L["achievements"],
             get = function()
-                return MultishotConfig.achievement
+                return Multishot.configDB.global.achievement
             end,
             set = function(_, v)
-                MultishotConfig.achievement = v
+                Multishot.configDB.global.achievement = v
             end
         },
         guildachievements = {
@@ -182,10 +194,10 @@ local generalOptions = {
             type = "toggle",
             name = L["guildachievements"],
             get = function()
-                return MultishotConfig.guildachievement
+                return Multishot.configDB.global.guildachievement
             end,
             set = function(_, v)
-                MultishotConfig.guildachievement = v
+                Multishot.configDB.global.guildachievement = v
             end
         },
         challengemode = {
@@ -193,10 +205,10 @@ local generalOptions = {
             type = "toggle",
             name = L["challengemode"],
             get = function()
-                return MultishotConfig.challengemode
+                return Multishot.configDB.global.challengemode
             end,
             set = function(_, v)
-                MultishotConfig.challengemode = v
+                Multishot.configDB.global.challengemode = v
             end
         },
         battleground = {
@@ -204,10 +216,10 @@ local generalOptions = {
             type = "toggle",
             name = L["battleground"],
             get = function()
-                return MultishotConfig.battleground
+                return Multishot.configDB.global.battleground
             end,
             set = function(_, v)
-                MultishotConfig.battleground = v
+                Multishot.configDB.global.battleground = v
             end
         },
         arena = {
@@ -215,10 +227,10 @@ local generalOptions = {
             type = "toggle",
             name = L["arena"],
             get = function()
-                return MultishotConfig.arena
+                return Multishot.configDB.global.arena
             end,
             set = function(_, v)
-                MultishotConfig.arena = v
+                Multishot.configDB.global.arena = v
             end
         },
         repchange = {
@@ -226,10 +238,10 @@ local generalOptions = {
             type = "toggle",
             name = L["repchange"],
             get = function()
-                return MultishotConfig.repchange
+                return Multishot.configDB.global.repchange
             end,
             set = function(_, v)
-                MultishotConfig.repchange = v
+                Multishot.configDB.global.repchange = v
             end
         },
         trade = {
@@ -237,10 +249,10 @@ local generalOptions = {
             type = "toggle",
             name = L["trade"],
             get = function()
-                return MultishotConfig.trade
+                return Multishot.configDB.global.trade
             end,
             set = function(_, v)
-                MultishotConfig.trade = v
+                Multishot.configDB.global.trade = v
             end
         },
         --[[
@@ -248,18 +260,18 @@ local generalOptions = {
     	order = 10,
     	type = "toggle",
     	name = L["garissonbuild"],
-    	get = function() return MultishotConfig.garissonbuild end,
-    	set = function(_,v) MultishotConfig.garissonbuild = v end },  
+    	get = function() return Multishot.configDB.global.garissonbuild end,
+    	set = function(_,v) Multishot.configDB.global.garissonbuild = v end },  
 	--]]
         legendaryloot = {
             order = 11,
             type = "toggle",
             name = L["legendaryloot"],
             get = function()
-                return MultishotConfig.legendaryloot
+                return Multishot.configDB.global.legendaryloot
             end,
             set = function(_, v)
-                MultishotConfig.legendaryloot = v
+                Multishot.configDB.global.legendaryloot = v
             end
         },
         mythicpluscompletion = {
@@ -267,10 +279,10 @@ local generalOptions = {
             type = "toggle",
             name = L["mythicpluscompletion"],
             get = function()
-                return MultishotConfig.mythicpluscompletion
+                return Multishot.configDB.global.mythicpluscompletion
             end,
             set = function(_, v)
-                MultishotConfig.mythicpluscompletion = v
+                Multishot.configDB.global.mythicpluscompletion = v
             end
         },
         --------------------------------------------------------------------------------
@@ -284,10 +296,10 @@ local generalOptions = {
             type = "toggle",
             name = L["firstkills"],
             get = function()
-                return MultishotConfig.firstkill
+                return Multishot.configDB.global.firstkill
             end,
             set = function(_, v)
-                MultishotConfig.firstkill = v
+                Multishot.configDB.global.firstkill = v
             end
         },
         --------------------------------------------------------------------------------
@@ -301,56 +313,12 @@ local generalOptions = {
                 ["3raid"] = L["bosskillsraid"]
             },
             get = function(_, k)
-                return MultishotConfig.groupstatus[k]
+                return Multishot.configDB.global.groupstatus[k]
             end,
             set = function(_, k, v)
-                MultishotConfig.groupstatus[k] = v
+                Multishot.configDB.global.groupstatus[k] = v
             end
         },
-        --------------------------------------------------------------------------------
-        --[[
-        header_difficulty = {
-            order = 300,
-            type = "header",
-            name = L["instancedifficulty"]
-        },
-        difficulty_party = {
-            order = 301,
-            type = "multiselect",
-            name = "party",
-            values = GetDifficulties("party"),
-            get = function(_, k)
-                return MultishotConfig.difficulty[k]
-            end,
-            set = function(_, k, v)
-                MultishotConfig.difficulty[k] = v
-            end
-        },
-        difficulty_raid = {
-            order = 302,
-            type = "multiselect",
-            name = "raid",
-            values = GetDifficulties("raid"),
-            get = function(_, k)
-                return MultishotConfig.difficulty[k]
-            end,
-            set = function(_, k, v)
-                MultishotConfig.difficulty[k] = v
-            end
-        },
-        difficulty_scenario = {
-            order = 303,
-            type = "multiselect",
-            name = "scenario",
-            values = GetDifficulties("scenario"),
-            get = function(_, k)
-                return MultishotConfig.difficulty[k]
-            end,
-            set = function(_, k, v)
-                MultishotConfig.difficulty[k] = v
-            end
-        },
-        ]]
         --------------------------------------------------------------------------------
         header2 = {
             order = 400,
@@ -363,10 +331,10 @@ local generalOptions = {
             name = L["timeLineEnable"],
             width = "double",
             get = function()
-                return MultishotConfig.timeLineEnable
+                return Multishot.configDB.global.timeLineEnable
             end,
             set = function(_, v)
-                MultishotConfig.timeLineEnable = v
+                Multishot.configDB.global.timeLineEnable = v
                 Multishot:TimeLineConfig(v)
             end
         },
@@ -378,10 +346,10 @@ local generalOptions = {
             max = 60,
             step = 5,
             get = function()
-                return MultishotConfig.delay3
+                return Multishot.configDB.global.delay3
             end,
             set = function(_, v)
-                MultishotConfig.delay3 = v
+                Multishot.configDB.global.delay3 = v
             end
         },
         --------------------------------------------------------------------------------
@@ -399,10 +367,10 @@ local generalOptions = {
             max = 10,
             step = .1,
             get = function()
-                return MultishotConfig.delay1
+                return Multishot.configDB.global.delay1
             end,
             set = function(_, v)
-                MultishotConfig.delay1 = v
+                Multishot.configDB.global.delay1 = v
             end
         },
         delay2 = {
@@ -413,10 +381,10 @@ local generalOptions = {
             max = 10,
             step = .1,
             get = function()
-                return MultishotConfig.delay2
+                return Multishot.configDB.global.delay2
             end,
             set = function(_, v)
-                MultishotConfig.delay2 = v
+                Multishot.configDB.global.delay2 = v
             end
         },
         --------------------------------------------------------------------------------
@@ -461,10 +429,10 @@ local generalOptions = {
             type = "toggle",
             name = L["close"],
             get = function()
-                return MultishotConfig.close
+                return Multishot.configDB.global.close
             end,
             set = function(_, v)
-                MultishotConfig.close = v
+                Multishot.configDB.global.close = v
             end
         },
         uihide = {
@@ -472,10 +440,10 @@ local generalOptions = {
             type = "toggle",
             name = L["uihide"],
             get = function()
-                return MultishotConfig.uihide
+                return Multishot.configDB.global.uihide
             end,
             set = function(_, v)
-                MultishotConfig.uihide = v
+                Multishot.configDB.global.uihide = v
             end
         },
         played = {
@@ -483,10 +451,10 @@ local generalOptions = {
             type = "toggle",
             name = L["played"],
             get = function()
-                return MultishotConfig.played
+                return Multishot.configDB.global.played
             end,
             set = function(_, v)
-                MultishotConfig.played = v
+                Multishot.configDB.global.played = v
             end
         },
         charpane = {
@@ -494,10 +462,10 @@ local generalOptions = {
             type = "toggle",
             name = L["charpane"],
             get = function()
-                return MultishotConfig.charpane
+                return Multishot.configDB.global.charpane
             end,
             set = function(_, v)
-                MultishotConfig.charpane = v
+                Multishot.configDB.global.charpane = v
             end
         },
         watermark = {
@@ -505,10 +473,10 @@ local generalOptions = {
             type = "toggle",
             name = L["watermark"],
             get = function()
-                return MultishotConfig.watermark
+                return Multishot.configDB.global.watermark
             end,
             set = function(_, v)
-                MultishotConfig.watermark = v
+                Multishot.configDB.global.watermark = v
             end
         },
         watermarkformat = {
@@ -518,14 +486,14 @@ local generalOptions = {
             desc = L["set the format for watermark text"] .. "\n" .. L["watermarkformattext"], -- "\n$n = name\n$c = class\n$l = level\n$z = zone\n$r = realm\n$d = date\n$b = line change"
             usage = L["clear the text and press Enter to restore defaults."],
             get = function()
-                return MultishotConfig.watermarkformat
+                return Multishot.configDB.global.watermarkformat
             end,
             set = function(_, v)
                 print(tostring(v))
                 if v == "" or not (v):find("[%w%p]+") or (v):find("\\n") then -- or (v):find("$[^nclzrdb]")
                     v = "$n($l) $c $b$z - $d$b$r"
                 end
-                MultishotConfig.watermarkformat = v
+                Multishot.configDB.global.watermarkformat = v
             end
         },
         watermarkanchor = {
@@ -540,10 +508,10 @@ local generalOptions = {
                 ["BOTTOMRIGHT"] = L["BOTTOMRIGHT"]
             }, -- add to localization
             get = function()
-                return MultishotConfig.watermarkanchor
+                return Multishot.configDB.global.watermarkanchor
             end,
             set = function(_, v)
-                MultishotConfig.watermarkanchor = v
+                Multishot.configDB.global.watermarkanchor = v
             end
         },
         watermarkfont = {
@@ -552,10 +520,10 @@ local generalOptions = {
             name = L["watermarkfont"],
             values = GetFonts,
             get = function()
-                return MultishotConfig.watermarkfont
+                return Multishot.configDB.global.watermarkfont
             end,
             set = function(_, v)
-                MultishotConfig.watermarkfont = v
+                Multishot.configDB.global.watermarkfont = v
             end
         },
         watermarkfontsize = {
@@ -564,10 +532,10 @@ local generalOptions = {
             name = L["watermarkfontsize"],
             values = GetFontSizes,
             get = function()
-                return MultishotConfig.watermarkfontsize
+                return Multishot.configDB.global.watermarkfontsize
             end,
             set = function(_, v)
-                MultishotConfig.watermarkfontsize = v
+                Multishot.configDB.global.watermarkfontsize = v
             end
         },
         watermarktest = {
@@ -592,10 +560,10 @@ local generalOptions = {
             type = "toggle",
             name = L["debug"],
             get = function()
-                return MultishotConfig.debug
+                return Multishot.configDB.global.debug
             end,
             set = function(_, v)
-                MultishotConfig.debug = v
+                Multishot.configDB.global.debug = v
             end
         },
         reset = {
@@ -603,19 +571,19 @@ local generalOptions = {
             type = "execute",
             name = L["reset"],
             func = function()
-                MultishotConfig.history = {}
+                Multishot.configDB.global.history = {}
             end
         }
     }
 }
 
 local difficultyOptions = {
-    name = "Difficulty Settings",
+    name = L["Difficulty Settings"],
     type = "group",
     args = {
         url = {
             order = 0,
-            name = "DifficultyID reference webpage:",
+            name = L["DifficultyID reference webpage:"],
             type = "input",
             width = 2.5,
             get = function()
@@ -624,67 +592,66 @@ local difficultyOptions = {
         },
         party = {
             order = 1,
-            name = "party",
+            name = L["PARTY"],
             type = "multiselect",
             values = GetDifficulties("party"),
             get = function(_, k)
-                return MultishotConfig.difficulty[k]
+                return Multishot.configDB.global.difficulty[k]
             end,
             set = function(_, k, v)
-                MultishotConfig.difficulty[k] = v
+                Multishot.configDB.global.difficulty[k] = v
             end
         },
         raid = {
             order = 2,
-            name = "raid",
+            name = L["RAID"],
             type = "multiselect",
             values = GetDifficulties("raid"),
             get = function(_, k)
-                return MultishotConfig.difficulty[k]
+                return Multishot.configDB.global.difficulty[k]
             end,
             set = function(_, k, v)
-                MultishotConfig.difficulty[k] = v
+                Multishot.configDB.global.difficulty[k] = v
             end
         },
         scenario = {
             order = 3,
-            name = "scenario",
+            name = L["SCENARIO"],
             type = "multiselect",
             values = GetDifficulties("scenario"),
             get = function(_, k)
-                return MultishotConfig.difficulty[k]
+                return Multishot.configDB.global.difficulty[k]
             end,
             set = function(_, k, v)
-                MultishotConfig.difficulty[k] = v
+                Multishot.configDB.global.difficulty[k] = v
             end
         },
         pvp = {
             order = 4,
-            name = "pvp",
+            name = L["PVP"],
             type = "multiselect",
             values = GetDifficulties("pvp"),
             get = function(_, k)
-                return MultishotConfig.difficulty[k]
+                return Multishot.configDB.global.difficulty[k]
             end,
             set = function(_, k, v)
-                MultishotConfig.difficulty[k] = v
+                Multishot.configDB.global.difficulty[k] = v
             end
         },
         none = {
             order = 5,
-            name = "none",
+            name = L["NONE"],
             type = "multiselect",
             values = GetDifficulties("none"),
             get = function(_, k)
-                return MultishotConfig.difficulty[k]
+                return Multishot.configDB.global.difficulty[k]
             end,
             set = function(_, k, v)
-                MultishotConfig.difficulty[k] = v
+                Multishot.configDB.global.difficulty[k] = v
             end
         }
     }
 }
-
 
 function Multishot:TimeLineConfig(enable)
     if enable then
@@ -697,21 +664,28 @@ function Multishot:TimeLineConfig(enable)
 end
 
 function Multishot:OnInitialize()
-    --     LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot", dataOptions)
-    --     Multishot.PrefPane = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot")
+    -- Load Configs
+    self.configDB = LibStub("AceDB-3.0"):New("MultishotConfigDB", defaults, true)
+
+    -- Register Option Menus
     self:RegisterMenus()
 
+    -- Register Slash Command
     self:RegisterChatCommand("multishot", function()
         InterfaceOptionsFrame_OpenToCategory(Multishot.ConfigPanel)
     end)
 
-    setmetatable(MultishotConfig, {
+    --[[
+    setmetatable(Multishot.configDB.global, {
         __index = dataDefaults
     })
-    MultishotConfig.history = MultishotConfig.history
-    MultishotConfig.difficulty = MultishotConfig.difficulty
-    MultishotConfig.groupstatus = MultishotConfig.groupstatus
 
+    -- I believe this is to read saved info into game
+    
+    Multishot.configDB.global.history = Multishot.configDB.global.history
+    Multishot.configDB.global.difficulty = Multishot.configDB.global.difficulty
+    Multishot.configDB.global.groupstatus = Multishot.configDB.global.groupstatus
+    ]]
 end
 
 function Multishot:RegisterMenus()
@@ -719,10 +693,10 @@ function Multishot:RegisterMenus()
     self.ConfigPanel = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot", "Multishot")
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot General Settings", generalOptions)
-    self.difficultySettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot General Settings",
-        "General Settings", "Multishot")
+    self.GeneralSettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot General Settings",
+        L["General Settings"], "Multishot")
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot Difficulty Settings", difficultyOptions)
-    self.difficultySettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot Difficulty Settings",
-        "Difficulty Settings", "Multishot")
+    self.DifficultySettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot Difficulty Settings",
+        L["Difficulty Settings"], "Multishot")
 end

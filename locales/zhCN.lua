@@ -58,4 +58,17 @@ L["watermarkformattext"] = "$n =角色 $c = 职业 $l = 等级 $z = 地区 $r = 
 L["watermarktest"] = "显示水印"
 
 -- Added by Nukme
+L["Auto-Screenshot Management Addon\n\n"] = "自动截图管理插件\n\n"
+L["Version"] = "版本"
+L["Author"] = "作者"
+L["Github Repo"] = "Github仓库"
+L["NGA Feedback"] = "NGA反馈贴"
 L["mythicpluscompletion"] = "大秘境完成"
+L["General Settings"] = "综合设置"
+L["Difficulty Settings"] = "难度设置"
+L["DifficultyID reference webpage:"] = "难度编号(DifficultyID)参考页面："
+L["PARTY"] = "小队"
+L["RAID"] = "团队"
+L["SCENARIO"] = "场景战役"
+L["PVP"] = "PVP"
+L["NONE"] = "无"

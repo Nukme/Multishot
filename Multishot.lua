@@ -1,8 +1,6 @@
 Multishot = LibStub("AceAddon-3.0"):NewAddon("Multishot", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Multishot")
 
-MultishotConfig = {}
-
 local isEnabled, isDelayed
 local strMatch = string.gsub(FACTION_STANDING_CHANGED, "%%%d?%$?s", "(.+)")
 local prefix = "WoWScrnShot_"
@@ -27,7 +25,7 @@ function Multishot:OnEnable()
     self:RegisterEvent("ENCOUNTER_END")
     self:RegisterEvent("SCREENSHOT_FAILED", "Debug")
     --self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    if MultishotConfig.timeLineEnable then
+    if Multishot.configDB.global.timeLineEnable then
         self.timeLineTimer = self:ScheduleRepeatingTimer("TimeLineProgress", 5)
         timeLineStart, timeLineElapsed = GetTime(), 0
     end
@@ -37,47 +35,47 @@ function Multishot:OnEnable()
 end
 
 function Multishot:PLAYER_LEVEL_UP(strEvent)
-    if MultishotConfig.levelup then
-        self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+    if Multishot.configDB.global.levelup then
+        self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
     end
 end
 
 --[[
 function Multishot:UNIT_GUILD_LEVEL(strEvent, strUnit)
-  if MultishotConfig.guildlevelup and strUnit == "player" then self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent) end
+  if Multishot.configDB.global.guildlevelup and strUnit == "player" then self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent) end
 end
 --]]
 function Multishot:ACHIEVEMENT_EARNED(strEvent, intId)
-    if MultishotConfig.guildachievement and select(12, GetAchievementInfo(intId)) then
-        self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+    if Multishot.configDB.global.guildachievement and select(12, GetAchievementInfo(intId)) then
+        self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
     end
-    if MultishotConfig.achievement and not select(12, GetAchievementInfo(intId)) then
-        self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+    if Multishot.configDB.global.achievement and not select(12, GetAchievementInfo(intId)) then
+        self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
     end
 end
 
 function Multishot:TRADE_ACCEPT_UPDATE(strEvent, strPlayer, strTarget)
-    if ((strPlayer == 1 and strTarget == 0) or (strPlayer == 0 and strTarget == 1)) and MultishotConfig.trade then
+    if ((strPlayer == 1 and strTarget == 0) or (strPlayer == 0 and strTarget == 1)) and Multishot.configDB.global.trade then
         self:CustomScreenshot(strEvent)
     end
 end
 
 function Multishot:CHALLENGE_MODE_COMPLETED(strEvent)
-    if not MultishotConfig.challengemode then
+    if not Multishot.configDB.global.challengemode then
         return
     end
     -- hooksecurefunc(ChallengeModeCompleteBanner,"PlayBanner",function()
-    --	self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+    --	self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
     -- end)
 end
 
 function Multishot:ADDON_LOADED(strEvent, subev)
-    if not MultishotConfig.mythicpluscompletion then
+    if not Multishot.configDB.global.mythicpluscompletion then
         return
     end
     if subev == "Blizzard_ChallengesUI" then
         hooksecurefunc(ChallengeModeCompleteBanner, "PlayBanner", function()
-            self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, subev)
+            self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, subev)
         end)
     else
         return
@@ -85,13 +83,13 @@ function Multishot:ADDON_LOADED(strEvent, subev)
 end
 
 function Multishot:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(strEvent)
-    if MultishotConfig.legendaryloot then
-        self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+    if Multishot.configDB.global.legendaryloot then
+        self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
     end
 end
 
 function Multishot:UPDATE_BATTLEFIELD_STATUS(strEvent)
-    if not MultishotConfig.arena or MultishotConfig.battleground then
+    if not Multishot.configDB.global.arena or Multishot.configDB.global.battleground then
         return
     end
     local winner = GetBattlefieldWinner()
@@ -99,13 +97,13 @@ function Multishot:UPDATE_BATTLEFIELD_STATUS(strEvent)
         return
     end
     local isArena, registered = IsActiveBattlefieldArena()
-    if (isArena) and not MultishotConfig.arena then
+    if (isArena) and not Multishot.configDB.global.arena then
         return
     end
     if isArena then
         if IsInArenaTeam() then
             if not PLAYER_FACTION_GROUP[winner] then -- draw, get our screenshot and bail
-                self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+                self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
                 return
             end
             local playerTeamId
@@ -117,26 +115,26 @@ function Multishot:UPDATE_BATTLEFIELD_STATUS(strEvent)
                 end
             end
             if playerTeamId and playerTeamId == winner then
-                self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+                self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
             end
         end
     else
         if PLAYER_FACTION_GROUP[winner] == GetPlayerFactionGroup() then
-            self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+            self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
         end
     end
 end
 
 function Multishot:CHAT_MSG_SYSTEM(strEvent, strMessage)
-    if MultishotConfig.repchange then
+    if Multishot.configDB.global.repchange then
         if string.match(strMessage, strMatch) then
-            self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay1, strEvent)
+            self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
         end
     end
 end
 
 function Multishot:CHAT_MSG_MONSTER_SAY(strEvent, strBuilding, arg2, arg3, arg4, strPlayer)
-    if MultishotConfig.timeLineEnable then
+    if Multishot.configDB.global.timeLineEnable then
         timeLineStart, timeLineElapsed = GetTime(), 0
     end
     Screenshot()
@@ -144,7 +142,7 @@ function Multishot:CHAT_MSG_MONSTER_SAY(strEvent, strBuilding, arg2, arg3, arg4,
 end
 
 function Multishot:TIME_PLAYED_MSG(strEvent, total, thislevel)
-    if MultishotConfig.timeLineEnable then
+    if Multishot.configDB.global.timeLineEnable then
         timeLineStart, timeLineElapsed = GetTime(), 0
     end
     Screenshot()
@@ -153,7 +151,7 @@ end
 
 --[[
 function Multishot:GARISSON_BUILDING_ACTIVATED(strEvent, arg1, arg2)
-	if MultishotConfig.garissonbuild then
+	if Multishot.configDB.global.garissonbuild then
 		self:RegisterEvent("CHAT_MSG_MONSTER_SAY")
 	end
 end
@@ -167,12 +165,12 @@ function Multishot:COMBAT_LOG_EVENT_UNFILTERED(strEvent, ...)
     local solo, inParty, inRaid
     if IsInRaid() then inRaid = true elseif IsInGroup() then inParty = true else solo = true end
     local _,_,difficultyID = GetInstanceInfo()
-    if not (sourceGuid == UnitGUID("player") and MultishotConfig.rares and Multishot.RareID[currentId]) and strType == "PARTY_KILL" then return end
-    if not ((solo and MultishotConfig.groupstatus["1solo"]) or (inParty and MultishotConfig.groupstatus["2party"]) or (inRaid and MultishotConfig.groupstatus["3raid"])) then return end
-    if difficultyID and not MultishotConfig.difficulty[difficultyID] then return end
+    if not (sourceGuid == UnitGUID("player") and Multishot.configDB.global.rares and Multishot.RareID[currentId]) and strType == "PARTY_KILL" then return end
+    if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or (inParty and Multishot.configDB.global.groupstatus["2party"]) or (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then return end
+    if difficultyID and not Multishot.configDB.global.difficulty[difficultyID] then return end
     if not (Multishot_dbWhitelist[currentId] or Multishot.BossID[currentId] or Multishot.RareID[currentId]) or Multishot_dbBlacklist[currentId] then return end
-    if MultishotConfig.firstkill and MultishotConfig.history[UnitName("player") .. currentId] then return end
-    MultishotConfig.history[player .. currentId] = true
+    if Multishot.configDB.global.firstkill and Multishot.configDB.global.history[UnitName("player") .. currentId] then return end
+    Multishot.configDB.global.history[player .. currentId] = true
     isDelayed = currentId  --FLAG
     if UnitIsDead("player") then
       self:PLAYER_REGEN_ENABLED(strType)
@@ -183,14 +181,14 @@ end
 -- Debug event created for watermark issues by Nukme@20220504
 --[[
 function Multishot:COMBAT_LOG_EVENT_UNFILTERED(strEvent)
-    if not MultishotConfig.debug then
+    if not Multishot.configDB.global.debug then
         return
     else
         local timestamp, subevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName,
             destFlags, destRaidFlags, spellID, _, _, auraType = CombatLogGetCurrentEventInfo()
 
         if subevent == "SPELL_CAST_SUCCESS" and spellID == 50842 then
-            self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay2, subevent .. spellID)
+            self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, subevent .. spellID)
         end
     end
 end
@@ -198,7 +196,7 @@ end
 
 function Multishot:PLAYER_REGEN_ENABLED(strEvent)
     if isDelayed then
-        self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay2, strEvent .. isDelayed)
+        self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. isDelayed)
         isDelayed = nil
     end
 end
@@ -214,30 +212,30 @@ function Multishot:ENCOUNTER_END(strEvent, ...)
         else
             solo = true
         end
-        if not ((solo and MultishotConfig.groupstatus["1solo"]) or (inParty and MultishotConfig.groupstatus["2party"]) or
-            (inRaid and MultishotConfig.groupstatus["3raid"])) then
+        if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or (inParty and Multishot.configDB.global.groupstatus["2party"]) or
+            (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then
             return
         end
-        if difficultyID and not MultishotConfig.difficulty[difficultyID] then
+        if difficultyID and not Multishot.configDB.global.difficulty[difficultyID] then
             return
         end
         if Multishot_dbBlacklist[encoutnerID] then
             return
         end
-        if MultishotConfig.firstkill and MultishotConfig.history[UnitName("player") .. encoutnerID] then
+        if Multishot.configDB.global.firstkill and Multishot.configDB.global.history[UnitName("player") .. encoutnerID] then
             return
         end
-        MultishotConfig.history[player .. encoutnerID] = true
+        Multishot.configDB.global.history[player .. encoutnerID] = true
         isDelayed = encoutnerID -- FLAG
         if isDelayed then
-            self:ScheduleTimer("CustomScreenshot", MultishotConfig.delay2, strEvent .. isDelayed)
+            self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. isDelayed)
             isDelayed = nil
         end
     end
 end
 
 function Multishot:SCREENSHOT_SUCCEEDED(strEvent)
-    if MultishotConfig.debug then
+    if Multishot.configDB.global.debug then
         self:Print(strEvent)
     end
     local minus1, now, plus1 = date(nil, time() - 1), date(), date(nil, time() + 1)
@@ -261,7 +259,7 @@ end
 
 -- not sure whether the persistent watermark is caused by this event. put here as a fail-safe.
 function Multishot:SCREENSHOT_FAILED(strEvent)
-    if MultishotConfig.debug then
+    if Multishot.configDB.global.debug then
         self:Print(strEvent)
     end
     local minus1, now, plus1 = date(nil, time() - 1), date(), date(nil, time() + 1)
@@ -286,13 +284,13 @@ end
 function Multishot:RefreshWatermark(show)
     if not show then -- passed in false
         Multishot.watermarkFrame:Hide()
-        if MultishotConfig.debug then
+        if Multishot.configDB.global.debug then
             self:Print("HIDE_WATERMARK")
         end
         return
     end
 
-    local anchor = MultishotConfig.watermarkanchor
+    local anchor = Multishot.configDB.global.watermarkanchor
     Multishot.watermarkFrame:ClearAllPoints()
     Multishot.watermarkFrame:SetPoint(anchor)
 
@@ -300,7 +298,7 @@ function Multishot:RefreshWatermark(show)
     Multishot.watermarkFrame.Text:SetPoint("CENTER", Multishot.watermarkFrame, "CENTER")
     Multishot.watermarkFrame.Text:SetJustifyH("CENTER")
 
-    local text = MultishotConfig.watermarkformat
+    local text = Multishot.configDB.global.watermarkformat
     local level = UnitLevel("player")
     local zone = GetRealZoneText()
     local tdate = date()
@@ -313,11 +311,11 @@ function Multishot:RefreshWatermark(show)
     text = text:gsub("$d", tdate)
     text = text:gsub("$b", "\n")
 
-    Multishot.watermarkFrame.Text:SetFont(MultishotConfig.watermarkfont, MultishotConfig.watermarkfontsize, "OUTLINE")
+    Multishot.watermarkFrame.Text:SetFont(Multishot.configDB.global.watermarkfont, Multishot.configDB.global.watermarkfontsize, "OUTLINE")
     Multishot.watermarkFrame.Text:SetFormattedText("%s%s%s", YELLOW_FONT_COLOR_CODE, text, FONT_COLOR_CODE_CLOSE)
 
     Multishot.watermarkFrame:Show()
-    if MultishotConfig.debug then
+    if Multishot.configDB.global.debug then
         self:Print("SHOW_WATERMARK")
     end
 end
@@ -344,7 +342,7 @@ function Multishot:TimeLineProgress()
     else
         timeLineElapsed = now - timeLineStart
     end
-    if timeLineElapsed >= (MultishotConfig.delay3 * 60) then
+    if timeLineElapsed >= (Multishot.configDB.global.delay3 * 60) then
         self:ScheduleTimer("CustomScreenshot", 0.2, L["timeline"])
     end
 end
@@ -353,33 +351,33 @@ function Multishot:CustomScreenshot(strDebug)
     self:Debug(strDebug)
 	self:RegisterEvent("SCREENSHOT_SUCCEEDED")
 	self:RegisterEvent("SCREENSHOT_FAILED")
-    if MultishotConfig.charpane and not PaperDollFrame:IsVisible() then
+    if Multishot.configDB.global.charpane and not PaperDollFrame:IsVisible() then
         ToggleCharacter("PaperDollFrame")
         if not PaperDollFrame:IsVisible() then
             self:ScheduleTimer("CustomScreenshot", 0.2, "RETRY")
         end
     end
-    if MultishotConfig.close and strDebug ~= "TRADE_ACCEPT_UPDATE" then
+    if Multishot.configDB.global.close and strDebug ~= "TRADE_ACCEPT_UPDATE" then
         CloseAllWindows()
     end
-    if MultishotConfig.uihide and
+    if Multishot.configDB.global.uihide and
         (string.find(strDebug, "PLAYER_REGEN_ENABLED") or string.find(strDebug, "UNIT_DIED") or
             string.find(strDebug, "PARTY_KILL") or string.find(strDebug, "CHALLENGE_MODE_COMPLETED") or
             string.find(strDebug, "PLAYER_LEVEL_UP") or string.find(strDebug, L["timeline"]) or
             string.find(strDebug, KEY_BINDING)) then
         self:UIToggle()
     end
-    if MultishotConfig.watermark then
+    if Multishot.configDB.global.watermark then
         self:RefreshWatermark(true)
     end
-    if MultishotConfig.played and
+    if Multishot.configDB.global.played and
         (strDebug == "PLAYER_LEVEL_UP" or strDebug == "ACHIEVEMENT_EARNED" or strDebug == "CHAT_MSG_SYSTEM" or strDebug ==
             "CHAT_MSG_MONSTER_SAY" or strDebug == KEY_BINDING) and strDebug ~= "TIME_PLAYED_MSG" then
         self:RegisterEvent("TIME_PLAYED_MSG")
         RequestTimePlayed()
         return
     end
-    if MultishotConfig.timeLineEnable then
+    if Multishot.configDB.global.timeLineEnable then
         timeLineStart, timeLineElapsed = GetTime(), 0
     end
     Screenshot()
@@ -408,7 +406,7 @@ function Multishot:Debug(strMessage)
         self:UIToggle(true)
         self:RefreshWatermark(false)
     end
-    if MultishotConfig.debug then
+    if Multishot.configDB.global.debug then
         self:Print(strMessage)
     end
 end
