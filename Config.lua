@@ -93,7 +93,7 @@ local defaults = {
         mythicpluscompletion = true,
         battleground = true,
         arena = true,
-        history = {},
+        -- history = {},
         delay3 = 20,
         timeLineEnable = false,
         -- garissonbuild = true,
@@ -102,6 +102,9 @@ local defaults = {
         watermarkanchor = "TOP",
         watermarkfont = STANDARD_TEXT_FONT,
         watermarkfontsize = CHAT_FONT_HEIGHTS[3]
+    },
+    char = {
+        history = {},
     }
 }
 
@@ -549,7 +552,6 @@ local generalOptions = {
             end
         },
         --------------------------------------------------------------------------------
-
         header5 = {
             order = 700,
             type = "header",
@@ -566,14 +568,30 @@ local generalOptions = {
                 Multishot.configDB.global.debug = v
             end
         },
-        reset = {
+        resethistory = {
             order = 702,
             type = "execute",
             name = L["reset"],
             func = function()
-                Multishot.configDB.global.history = {}
+                Multishot.configDB.char.history = {}
+            end
+        },
+        --------------------------------------------------------------------------------
+        header6 = {
+            order = 800,
+            type = "header",
+            name = L["Reset All Settings"],
+        },
+        reset = {
+            order = 801,
+            type = "execute",
+            name = L["Reset Button"],
+            func = function()
+                Multishot.configDB:ResetDB("Default")
+                LibStub("AceConfigRegistry-3.0"):NotifyChange("Multishot")
             end
         }
+
     }
 }
 
@@ -664,8 +682,8 @@ function Multishot:TimeLineConfig(enable)
 end
 
 function Multishot:OnInitialize()
-    -- Load Configs
-    self.configDB = LibStub("AceDB-3.0"):New("MultishotConfigDB", defaults, true)
+    -- Register Config Values
+    self:RegisterConfigs()
 
     -- Register Option Menus
     self:RegisterMenus()
@@ -686,6 +704,10 @@ function Multishot:OnInitialize()
     Multishot.configDB.global.difficulty = Multishot.configDB.global.difficulty
     Multishot.configDB.global.groupstatus = Multishot.configDB.global.groupstatus
     ]]
+end
+
+function Multishot:RegisterConfigs()
+    self.configDB = LibStub("AceDB-3.0"):New("MultishotConfigDB", defaults, true)
 end
 
 function Multishot:RegisterMenus()

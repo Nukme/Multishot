@@ -79,3 +79,5 @@ L["RAID"] = true
 L["SCENARIO"] = true
 L["PVP"] = true
 L["NONE"] = true
+L["Reset All Settings"] = true
+L["Reset Button"] = true
