@@ -570,24 +570,30 @@ local generalOptions = {
                 Multishot.configDB.global.debug = v
             end
         },
+        --------------------------------------------------------------------------------
+        header6 = {
+            order = 800,
+            type = "header",
+            name = L["Reset Character Kill History"],
+        },
         resethistory = {
-            order = 702,
+            order = 801,
             type = "execute",
-            name = L["reset"],
+            name = L["Click to Reset"],
             func = function()
                 Multishot.historyDB.char.history = {}
             end
         },
         --------------------------------------------------------------------------------
-        header6 = {
-            order = 800,
+        header7 = {
+            order = 900,
             type = "header",
-            name = L["Reset All Settings"],
+            name = L["Reset All General Settings"] ,
         },
         reset = {
-            order = 801,
+            order = 901,
             type = "execute",
-            name = L["Reset Button"],
+            name = L["Click to Reset"],
             func = function()
                 Multishot.configDB:ResetDB("Default")
                 LibStub("AceConfigRegistry-3.0"):NotifyChange("Multishot")
@@ -697,8 +703,9 @@ function Multishot:OnInitialize()
 end
 
 function Multishot:RegisterConfigs()
+    -- General Settings Defaults DBObj
     self.configDB = LibStub("AceDB-3.0"):New("MultishotConfigDB", defaults, true)
-
+    -- Encounter History Defaults DBObj
     self.historyDB = LibStub("AceDB-3.0"):New("MultishotHistoryDB", defaults_history, true)
 end
 
