@@ -34,10 +34,6 @@ function Multishot:OnEnable()
     local ssformat = GetCVar("screenshotFormat")
     extension = (ssformat == "tga") and ".tga" or (ssformat == "png") and ".png" or ".jpg"
     Multishot.watermarkFrame = Multishot.watermarkFrame or Multishot:CreateWatermark()
-
-    self:RegisterChatCommand("multishot", function()
-        InterfaceOptionsFrame_OpenToCategory(Multishot.PrefPane)
-    end)
 end
 
 function Multishot:PLAYER_LEVEL_UP(strEvent)
@@ -327,7 +323,7 @@ function Multishot:RefreshWatermark(show)
 end
 
 function Multishot:CreateWatermark()
-    local f = CreateFrame("Frame", "MultishotWatermark", WorldFrame)
+    local f = CreateFrame("Frame", "MultishotWatermark", UIParent) -- changed from WorldFrame to UIParent
     f:SetFrameStrata("TOOLTIP")
     f:SetFrameLevel(0)
     f:SetWidth(350)
@@ -387,6 +383,7 @@ function Multishot:CustomScreenshot(strDebug)
         timeLineStart, timeLineElapsed = GetTime(), 0
     end
     Screenshot()
+    -- if bug still exists, force a delayed watermark hiding here
 end
 
 function Multishot:UIToggle(show)

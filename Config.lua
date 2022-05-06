@@ -24,25 +24,30 @@ local GetFontSizes = function()
     return sizes
 end
 
-local GetDifficulties = function()
-    local diffs = {
-        [0] = _G.NONE
-    }
-    for i = 1, 33 do
-        local name = GetDifficultyInfo(i)
-        if name and name ~= "" then
+-- categorized by instance type  Nukme@20220505
+local diffcap = 300
+function GetDifficulties(_T)
+    -- local diffs = {
+    --     [0] = _G.NONE
+    -- }
+    local diffs = {}
+    for i = 1, diffcap do
+        local name, type = GetDifficultyInfo(i)
+        if name and type == _T then
             diffs[i] = "[" .. i .. "] " .. name
         end
     end
     return diffs
 end
-local getDiffDefaults = function()
-    local defaults = {
-        [0] = true
-    }
-    for i = 1, 33 do
-        local name = GetDifficultyInfo(i)
-        if name and name ~= "" then
+
+function getDiffDefaults(_T)
+    -- local defaults = {
+    --     [0] = true
+    -- }
+    local defaults = {}
+    for i = 1, diffcap do
+        local name, type = GetDifficultyInfo(i)
+        if name and type == _T then
             defaults[i] = true
         end
     end
@@ -86,9 +91,55 @@ local dataDefaults = {
     watermarkfontsize = CHAT_FONT_HEIGHTS[3]
 }
 
-local dataOptions = {
+--[[ **********************************************************************
+        Configuration Options Table
+     **********************************************************************]]
+
+local introOptions = {
     type = "group",
     name = "Multishot",
+    args = {
+        intro = {
+            order = 0,
+            type = "description",
+            name = "Manages your screenshots.\n\n",
+        },
+        version = {
+            order = 1,
+            type = "description",
+            -- name = string.format("%30s  %-40s", "|cFFFFD700Version|r", GetAddOnMetadata("Multishot", "Version"))
+            name = string.format("%s\n    %s\n\n","|cFFFFD700Version|r", GetAddOnMetadata("Multishot", "Version"))
+        },
+        author = {
+            order = 2,
+            type = "description",
+            -- name = string.format("%30s  %-40s", "|cFFFFD700Author|r", "dlui&dridzt (original), Nukme")
+            name = string.format("%s\n    %s\n\n", "|cFFFFD700Author|r", "dlui&dridzt (original), Nukme")
+        },
+        repo = {
+            order = 3,
+            type = "input",
+            name = "Github Repo",
+            width = "double",
+            get = function()
+                return GetAddOnMetadata("Multishot", "X-Repository")
+            end
+        },
+        feedback = {
+            order = 4,
+            type = "input",
+            name = "NGA Feedback",
+            width = "double",
+            get = function()
+                return GetAddOnMetadata("Multishot", "X-NGA_Feedback")
+            end
+        },
+    }
+}
+
+local generalOptions = {
+    type = "group",
+    name = "General Settings",
     args = {
         --------------------------------------------------------------------------------
         intro = {
@@ -257,11 +308,17 @@ local dataOptions = {
             end
         },
         --------------------------------------------------------------------------------
-        difficulty = {
+        --[[
+        header_difficulty = {
             order = 300,
+            type = "header",
+            name = L["instancedifficulty"]
+        },
+        difficulty_party = {
+            order = 301,
             type = "multiselect",
-            name = L["instancedifficulty"],
-            values = GetDifficulties,
+            name = "party",
+            values = GetDifficulties("party"),
             get = function(_, k)
                 return MultishotConfig.difficulty[k]
             end,
@@ -269,6 +326,31 @@ local dataOptions = {
                 MultishotConfig.difficulty[k] = v
             end
         },
+        difficulty_raid = {
+            order = 302,
+            type = "multiselect",
+            name = "raid",
+            values = GetDifficulties("raid"),
+            get = function(_, k)
+                return MultishotConfig.difficulty[k]
+            end,
+            set = function(_, k, v)
+                MultishotConfig.difficulty[k] = v
+            end
+        },
+        difficulty_scenario = {
+            order = 303,
+            type = "multiselect",
+            name = "scenario",
+            values = GetDifficulties("scenario"),
+            get = function(_, k)
+                return MultishotConfig.difficulty[k]
+            end,
+            set = function(_, k, v)
+                MultishotConfig.difficulty[k] = v
+            end
+        },
+        ]]
         --------------------------------------------------------------------------------
         header2 = {
             order = 400,
@@ -527,6 +609,83 @@ local dataOptions = {
     }
 }
 
+local difficultyOptions = {
+    name = "Difficulty Settings",
+    type = "group",
+    args = {
+        url = {
+            order = 0,
+            name = "DifficultyID reference webpage:",
+            type = "input",
+            width = 2.5,
+            get = function()
+                return "https://wowpedia.fandom.com/wiki/DifficultyID"
+            end
+        },
+        party = {
+            order = 1,
+            name = "party",
+            type = "multiselect",
+            values = GetDifficulties("party"),
+            get = function(_, k)
+                return MultishotConfig.difficulty[k]
+            end,
+            set = function(_, k, v)
+                MultishotConfig.difficulty[k] = v
+            end
+        },
+        raid = {
+            order = 2,
+            name = "raid",
+            type = "multiselect",
+            values = GetDifficulties("raid"),
+            get = function(_, k)
+                return MultishotConfig.difficulty[k]
+            end,
+            set = function(_, k, v)
+                MultishotConfig.difficulty[k] = v
+            end
+        },
+        scenario = {
+            order = 3,
+            name = "scenario",
+            type = "multiselect",
+            values = GetDifficulties("scenario"),
+            get = function(_, k)
+                return MultishotConfig.difficulty[k]
+            end,
+            set = function(_, k, v)
+                MultishotConfig.difficulty[k] = v
+            end
+        },
+        pvp = {
+            order = 4,
+            name = "pvp",
+            type = "multiselect",
+            values = GetDifficulties("pvp"),
+            get = function(_, k)
+                return MultishotConfig.difficulty[k]
+            end,
+            set = function(_, k, v)
+                MultishotConfig.difficulty[k] = v
+            end
+        },
+        none = {
+            order = 5,
+            name = "none",
+            type = "multiselect",
+            values = GetDifficulties("none"),
+            get = function(_, k)
+                return MultishotConfig.difficulty[k]
+            end,
+            set = function(_, k, v)
+                MultishotConfig.difficulty[k] = v
+            end
+        }
+    }
+}
+
+
 function Multishot:TimeLineConfig(enable)
     if enable then
         Multishot.timeLineTimer = Multishot:ScheduleRepeatingTimer("TimeLineProgress", 5)
@@ -538,12 +697,32 @@ function Multishot:TimeLineConfig(enable)
 end
 
 function Multishot:OnInitialize()
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot", dataOptions)
-    Multishot.PrefPane = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot")
+    --     LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot", dataOptions)
+    --     Multishot.PrefPane = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot")
+    self:RegisterMenus()
+
+    self:RegisterChatCommand("multishot", function()
+        InterfaceOptionsFrame_OpenToCategory(Multishot.ConfigPanel)
+    end)
+
     setmetatable(MultishotConfig, {
         __index = dataDefaults
     })
     MultishotConfig.history = MultishotConfig.history
     MultishotConfig.difficulty = MultishotConfig.difficulty
     MultishotConfig.groupstatus = MultishotConfig.groupstatus
+
+end
+
+function Multishot:RegisterMenus()
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot", introOptions)
+    self.ConfigPanel = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot", "Multishot")
+
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot General Settings", generalOptions)
+    self.difficultySettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot General Settings",
+        "General Settings", "Multishot")
+
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot Difficulty Settings", difficultyOptions)
+    self.difficultySettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot Difficulty Settings",
+        "Difficulty Settings", "Multishot")
 end
