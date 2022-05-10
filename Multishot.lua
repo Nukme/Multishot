@@ -32,6 +32,7 @@ function Multishot:OnEnable()
     local ssformat = GetCVar("screenshotFormat")
     extension = (ssformat == "tga") and ".tga" or (ssformat == "png") and ".png" or ".jpg"
     Multishot.watermarkFrame = Multishot.watermarkFrame or Multishot:CreateWatermark()
+    self:RefreshWatermark(false)
 end
 
 function Multishot:PLAYER_LEVEL_UP(strEvent)
@@ -302,9 +303,14 @@ function Multishot:RefreshWatermark(show)
     Multishot.watermarkFrame:ClearAllPoints()
     Multishot.watermarkFrame:SetPoint(anchor)
 
+    -- Set Watermark Text Position
     Multishot.watermarkFrame.Text:ClearAllPoints()
     Multishot.watermarkFrame.Text:SetPoint("CENTER", Multishot.watermarkFrame, "CENTER")
     Multishot.watermarkFrame.Text:SetJustifyH("CENTER")
+
+    -- Set Watermark Text Font
+    Multishot.watermarkFrame.Text:SetFont(Multishot.configDB.global.watermarkfont,
+    Multishot.configDB.global.watermarkfontsize, "OUTLINE")
 
     if show then
         Multishot:ShowWaterMark()
@@ -332,8 +338,6 @@ function Multishot:ShowWaterMark()
     text = text:gsub("$d", tdate)
     text = text:gsub("$b", "\n")
 
-    Multishot.watermarkFrame.Text:SetFont(Multishot.configDB.global.watermarkfont,
-        Multishot.configDB.global.watermarkfontsize, "OUTLINE")
     Multishot.watermarkFrame.Text:SetFormattedText("%s%s%s", YELLOW_FONT_COLOR_CODE, text, FONT_COLOR_CODE_CLOSE)
 
     -- Brutal Force Show
@@ -345,7 +349,7 @@ function Multishot:ShowWaterMark()
 
     -- Debug Info
     if Multishot.configDB.global.debug then
-        self:Print("SHOW_WATERMARK : " .. attempt .. " Attempt(s)")
+        self:Print("WATERMARK_SHOW " .. attempt .. " attempt(s)")
     end
 end
 
@@ -362,7 +366,7 @@ function Multishot:HideWaterMark()
 
     -- Debug Info
     if Multishot.configDB.global.debug then
-        self:Print("HIDE_WATERMARK :" .. attempt .. " Attempt(s)")
+        self:Print("WATERMARK_HIDE " .. attempt .. " attempt(s)")
     end
 end
 
