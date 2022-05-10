@@ -283,19 +283,32 @@ function Multishot:SCREENSHOT_FAILED(strEvent)
 end
 ]]
 
-function Multishot:RefreshWatermark(show)
-    if not show then -- passed in false
-        local try = 0
-        while Multishot.watermarkFrame:IsShown() and try < 100 do
-            Multishot.watermarkFrame:Hide()
-            try = try + 1
-        end
-        if Multishot.configDB.global.debug then
-            self:Print("HIDE_WATERMARK " .. try .. " attempt(s)")
-        end
-        return
-    end
+function Multishot:CreateWatermark()
+    local f = CreateFrame("Frame", "MultishotWatermark", UIParent) -- changed from WorldFrame to UIParent
+    f:SetFrameStrata("TOOLTIP")
+    f:SetFrameLevel(0)
+    f:SetWidth(350)
+    f:SetHeight(100)
 
+    f.Text = f:CreateFontString(nil, "OVERLAY")
+    f.Text:SetShadowOffset(1, -1)
+
+    return f
+end
+
+function Multishot:RefreshWatermark(show)
+    if show then
+        Multishot:ShowWaterMark()
+    else
+        Multishot:HideWaterMark()
+    end
+end
+
+--[[
+    Wraps API f:Show() and f:Hide() 
+]]
+
+function Multishot:ShowWaterMark()
     local anchor = Multishot.configDB.global.watermarkanchor
     Multishot.watermarkFrame:ClearAllPoints()
     Multishot.watermarkFrame:SetPoint(anchor)
@@ -321,23 +334,29 @@ function Multishot:RefreshWatermark(show)
         Multishot.configDB.global.watermarkfontsize, "OUTLINE")
     Multishot.watermarkFrame.Text:SetFormattedText("%s%s%s", YELLOW_FONT_COLOR_CODE, text, FONT_COLOR_CODE_CLOSE)
 
-    Multishot.watermarkFrame:Show()
+    local attempt = 0
+    while Multishot.watermarkFrame and not Multishot.watermarkFrame:IsShown() and attempt < 100 do
+        Multishot.watermarkFrame:Show()
+        attempt = attempt + 1
+    end
+
     if Multishot.configDB.global.debug then
-        self:Print("SHOW_WATERMARK")
+        self:Print("SHOW_WATERMARK" .. attempt .. " attempt(s)")
     end
 end
 
-function Multishot:CreateWatermark()
-    local f = CreateFrame("Frame", "MultishotWatermark", UIParent) -- changed from WorldFrame to UIParent
-    f:SetFrameStrata("TOOLTIP")
-    f:SetFrameLevel(0)
-    f:SetWidth(350)
-    f:SetHeight(100)
+function Multishot:HideWaterMark()
+    Multishot.watermarkFrame.Text:SetText("")
 
-    f.Text = f:CreateFontString(nil, "OVERLAY")
-    f.Text:SetShadowOffset(1, -1)
+    local attempt = 0
+    while Multishot.watermarkFrame and Multishot.watermarkFrame:IsShown() and attempt < 100 do
+        Multishot.watermarkFrame:Hide()
+        attempt = attempt + 1
+    end
 
-    return f
+    if Multishot.configDB.global.debug then
+        self:Print("HIDE_WATERMARK " .. attempt .. " attempt(s)")
+    end
 end
 
 function Multishot:TimeLineProgress()
