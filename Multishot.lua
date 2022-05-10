@@ -313,9 +313,9 @@ function Multishot:RefreshWatermark(show)
     Multishot.configDB.global.watermarkfontsize, "OUTLINE")
 
     if show then
-        Multishot:ShowWaterMark()
+        Multishot:ShowWatermark()
     else
-        Multishot:HideWaterMark()
+        Multishot:HideWatermark()
     end
 end
 
@@ -323,7 +323,7 @@ end
     Wraps API f:Show() and f:Hide() 
 ]]
 
-function Multishot:ShowWaterMark()
+function Multishot:ShowWatermark()
     -- Set Text
     local text = Multishot.configDB.global.watermarkformat
     local level = UnitLevel("player")
@@ -353,7 +353,7 @@ function Multishot:ShowWaterMark()
     end
 end
 
-function Multishot:HideWaterMark()
+function Multishot:HideWatermark()
     -- Set Text to nil
     Multishot.watermarkFrame.Text:SetText("")
 
