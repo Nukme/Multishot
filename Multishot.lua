@@ -297,6 +297,15 @@ function Multishot:CreateWatermark()
 end
 
 function Multishot:RefreshWatermark(show)
+    -- Set Watermark Position
+    local anchor = Multishot.configDB.global.watermarkanchor
+    Multishot.watermarkFrame:ClearAllPoints()
+    Multishot.watermarkFrame:SetPoint(anchor)
+
+    Multishot.watermarkFrame.Text:ClearAllPoints()
+    Multishot.watermarkFrame.Text:SetPoint("CENTER", Multishot.watermarkFrame, "CENTER")
+    Multishot.watermarkFrame.Text:SetJustifyH("CENTER")
+
     if show then
         Multishot:ShowWaterMark()
     else
@@ -309,14 +318,7 @@ end
 ]]
 
 function Multishot:ShowWaterMark()
-    local anchor = Multishot.configDB.global.watermarkanchor
-    Multishot.watermarkFrame:ClearAllPoints()
-    Multishot.watermarkFrame:SetPoint(anchor)
-
-    Multishot.watermarkFrame.Text:ClearAllPoints()
-    Multishot.watermarkFrame.Text:SetPoint("CENTER", Multishot.watermarkFrame, "CENTER")
-    Multishot.watermarkFrame.Text:SetJustifyH("CENTER")
-
+    -- Set Text
     local text = Multishot.configDB.global.watermarkformat
     local level = UnitLevel("player")
     local zone = GetRealZoneText()
@@ -334,28 +336,33 @@ function Multishot:ShowWaterMark()
         Multishot.configDB.global.watermarkfontsize, "OUTLINE")
     Multishot.watermarkFrame.Text:SetFormattedText("%s%s%s", YELLOW_FONT_COLOR_CODE, text, FONT_COLOR_CODE_CLOSE)
 
+    -- Brutal Force Show
     local attempt = 0
     while Multishot.watermarkFrame and not Multishot.watermarkFrame:IsShown() and attempt < 100 do
         Multishot.watermarkFrame:Show()
         attempt = attempt + 1
     end
 
+    -- Debug Info
     if Multishot.configDB.global.debug then
-        self:Print("SHOW_WATERMARK" .. attempt .. " attempt(s)")
+        self:Print("SHOW_WATERMARK : " .. attempt .. " Attempt(s)")
     end
 end
 
 function Multishot:HideWaterMark()
+    -- Set Text to nil
     Multishot.watermarkFrame.Text:SetText("")
 
+    -- Brutal Force Hide
     local attempt = 0
     while Multishot.watermarkFrame and Multishot.watermarkFrame:IsShown() and attempt < 100 do
         Multishot.watermarkFrame:Hide()
         attempt = attempt + 1
     end
 
+    -- Debug Info
     if Multishot.configDB.global.debug then
-        self:Print("HIDE_WATERMARK " .. attempt .. " attempt(s)")
+        self:Print("HIDE_WATERMARK :" .. attempt .. " Attempt(s)")
     end
 end
 
