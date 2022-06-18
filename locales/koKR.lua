@@ -81,3 +81,6 @@ L["watermarktest"] = "워터마크 표시(토글)" -- Needs review
 -- L["Reset Character Kill History"] = ""
 -- L["Reset All General Settings"]  = ""
 -- L["Click to Reset"] = ""
+-- L["Encounter Success"] = ""
+-- L["Screenshot Events"] = ""
+-- L["Encounter Settings"] = ""

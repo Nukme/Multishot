@@ -39,15 +39,15 @@ end
 
 function GetDiffDefaults()
     local pre_selected = {
-        [8] = true,     -- Mythic Keystone
-        [1] = true,     -- Normal Dungeon
-        [2] = true,     -- Heroic Dungeon
-        [23] = true,    -- Mythic Dungeon
-        [24] = true,    -- Timewalking Dungeon
-        [14] = true,    -- Normal Raid
-        [15] = true,    -- Heroic Raid
-        [16] = true,    -- Mythic Raid
-        [33] = true,    -- Timewaling Raid
+        [8] = true, -- Mythic Keystone
+        [1] = true, -- Normal Dungeon
+        [2] = true, -- Heroic Dungeon
+        [23] = true, -- Mythic Dungeon
+        [24] = true, -- Timewalking Dungeon
+        [14] = true, -- Normal Raid
+        [15] = true, -- Heroic Raid
+        [16] = true, -- Mythic Raid
+        [33] = true, -- Timewaling Raid
     }
     local diff_defaults = {}
     for i = 1, diffcap do
@@ -66,7 +66,7 @@ end
 --[[ **********************************************************************
         Configuration Default Values
      **********************************************************************]]
-     
+
 local defaults = {
     global = {
         levelup = true,
@@ -92,6 +92,7 @@ local defaults = {
         guildachievement = true,
         challengemode = true,
         mythicpluscompletion = true,
+        encounter_success = true,
         battleground = true,
         arena = true,
         delay3 = 20,
@@ -105,9 +106,9 @@ local defaults = {
     }
 }
 
-local defaults_history ={
+local defaults_history = {
     char = {
-        history = {}, 
+        history = {},
     }
 }
 
@@ -161,11 +162,16 @@ local generalOptions = {
     name = L["General Settings"],
     args = {
         --------------------------------------------------------------------------------
-        intro = {
+        header0 = {
             order = 0,
-            type = "description",
-            name = L["intro"] .. ":\n"
+            type = "header",
+            name = L["Screenshot Events"]
         },
+        -- intro = {
+        --     order = 0,
+        --     type = "description",
+        --     name = L["intro"] .. ":\n"
+        -- },
         levelups = {
             order = 1,
             type = "toggle",
@@ -292,38 +298,15 @@ local generalOptions = {
                 Multishot.configDB.global.mythicpluscompletion = v
             end
         },
-        --------------------------------------------------------------------------------
-        header1 = {
-            order = 100,
-            type = "header",
-            name = L["bosskillshots"]
-        },
-        firstkills = {
-            order = 101,
+        encounter_success = {
+            order = 13,
             type = "toggle",
-            name = L["firstkills"],
+            name = L["Encounter Success"],
             get = function()
-                return Multishot.configDB.global.firstkill
+                return Multishot.configDB.global.encounter_success
             end,
             set = function(_, v)
-                Multishot.configDB.global.firstkill = v
-            end
-        },
-        --------------------------------------------------------------------------------
-        groupstatus = {
-            order = 200,
-            type = "multiselect",
-            name = L["groupstatus"],
-            values = {
-                ["1solo"] = L["bosskillssolo"],
-                ["2party"] = L["bosskillsparty"],
-                ["3raid"] = L["bosskillsraid"]
-            },
-            get = function(_, k)
-                return Multishot.configDB.global.groupstatus[k]
-            end,
-            set = function(_, k, v)
-                Multishot.configDB.global.groupstatus[k] = v
+                Multishot.configDB.global.encounter_success = v
             end
         },
         --------------------------------------------------------------------------------
@@ -590,7 +573,7 @@ local generalOptions = {
         header7 = {
             order = 900,
             type = "header",
-            name = L["Reset All General Settings"] ,
+            name = L["Reset All General Settings"],
         },
         reset = {
             order = 901,
@@ -605,12 +588,52 @@ local generalOptions = {
     }
 }
 
-local difficultyOptions = {
-    name = L["Difficulty Settings"],
+local encounterOptions = {
+    name = L["Encounter Settings"],
     type = "group",
     args = {
-        url = {
+        --------------------------------------------------------------------------------
+        header1 = {
             order = 0,
+            type = "header",
+            name = L["bosskillshots"]
+        },
+        firstkills = {
+            order = 0.1,
+            type = "toggle",
+            name = L["firstkills"],
+            get = function()
+                return Multishot.configDB.global.firstkill
+            end,
+            set = function(_, v)
+                Multishot.configDB.global.firstkill = v
+            end
+        },
+        --------------------------------------------------------------------------------
+        groupstatus = {
+            order = 0.2,
+            type = "multiselect",
+            name = L["groupstatus"],
+            values = {
+                ["1solo"] = L["bosskillssolo"],
+                ["2party"] = L["bosskillsparty"],
+                ["3raid"] = L["bosskillsraid"]
+            },
+            get = function(_, k)
+                return Multishot.configDB.global.groupstatus[k]
+            end,
+            set = function(_, k, v)
+                Multishot.configDB.global.groupstatus[k] = v
+            end
+        },
+        --------------------------------------------------------------------------------
+        header2 = {
+            order = 0.8,
+            type = "header",
+            name = L["Difficulty Settings"]
+        },
+        url = {
+            order = 0.9,
             name = L["DifficultyID reference webpage:"],
             type = "input",
             width = 2.5,
@@ -720,7 +743,7 @@ function Multishot:RegisterMenus()
     self.GeneralSettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot General Settings",
         L["General Settings"], "Multishot")
 
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot Difficulty Settings", difficultyOptions)
-    self.DifficultySettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot Difficulty Settings",
-        L["Difficulty Settings"], "Multishot")
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot Encounter Settings", encounterOptions)
+    self.DifficultySettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot Encounter Settings",
+        L["Encounter Settings"], "Multishot")
 end

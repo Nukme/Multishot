@@ -203,35 +203,39 @@ function Multishot:PLAYER_REGEN_ENABLED(strEvent)
 end
 
 function Multishot:ENCOUNTER_END(strEvent, ...)
-    local encoutnerID, encounterName, difficultyID, raidsize, endstatus = ...
-    if endstatus == 1 then
-        local solo, inParty, inRaid
-        if IsInRaid() then
-            inRaid = true
-        elseif IsInGroup() then
-            inParty = true
-        else
-            solo = true
-        end
-        if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or
-            (inParty and Multishot.configDB.global.groupstatus["2party"]) or
-            (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then
-            return
-        end
-        if difficultyID and not Multishot.configDB.global.difficulty[difficultyID] then
-            return
-        end
-        if Multishot_dbBlacklist[encoutnerID] then
-            return
-        end
-        if Multishot.configDB.global.firstkill and Multishot.historyDB.char.history[player .. encoutnerID] then
-            return
-        end
-        Multishot.historyDB.char.history[player .. encoutnerID] = true
-        isDelayed = encoutnerID -- FLAG
-        if isDelayed then
-            self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. isDelayed)
-            isDelayed = nil
+    if not Multishot.configDB.global.encounter_success then
+        return
+    else
+        local encoutnerID, encounterName, difficultyID, raidsize, endstatus = ...
+        if endstatus == 1 then
+            local solo, inParty, inRaid
+            if IsInRaid() then
+                inRaid = true
+            elseif IsInGroup() then
+                inParty = true
+            else
+                solo = true
+            end
+            if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or
+                (inParty and Multishot.configDB.global.groupstatus["2party"]) or
+                (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then
+                return
+            end
+            if difficultyID and not Multishot.configDB.global.difficulty[difficultyID] then
+                return
+            end
+            if Multishot_dbBlacklist[encoutnerID] then
+                return
+            end
+            if Multishot.configDB.global.firstkill and Multishot.historyDB.char.history[player .. encoutnerID] then
+                return
+            end
+            Multishot.historyDB.char.history[player .. encoutnerID] = true
+            isDelayed = encoutnerID -- FLAG
+            if isDelayed then
+                self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. isDelayed)
+                isDelayed = nil
+            end
         end
     end
 end
@@ -310,7 +314,7 @@ function Multishot:RefreshWatermark(show)
 
     -- Set Watermark Text Font
     Multishot.watermarkFrame.Text:SetFont(Multishot.configDB.global.watermarkfont,
-    Multishot.configDB.global.watermarkfontsize, "OUTLINE")
+        Multishot.configDB.global.watermarkfontsize, "OUTLINE")
 
     if show then
         Multishot:ShowWatermark()
@@ -407,7 +411,9 @@ function Multishot:CustomScreenshot(strDebug)
         self:RefreshWatermark(true)
     end
     if Multishot.configDB.global.played and
-        (strDebug == "PLAYER_LEVEL_UP" or strDebug == "ACHIEVEMENT_EARNED" or strDebug == "CHAT_MSG_SYSTEM" or strDebug ==
+        (
+        strDebug == "PLAYER_LEVEL_UP" or strDebug == "ACHIEVEMENT_EARNED" or strDebug == "CHAT_MSG_SYSTEM" or
+            strDebug ==
             "CHAT_MSG_MONSTER_SAY" or strDebug == KEY_BINDING) and strDebug ~= "TIME_PLAYED_MSG" then
         self:RegisterEvent("TIME_PLAYED_MSG")
         RequestTimePlayed()

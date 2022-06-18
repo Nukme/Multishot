@@ -82,3 +82,6 @@ L["NONE"] = true
 L["Reset Character Kill History"] = true
 L["Reset All General Settings"]  = true
 L["Click to Reset"] = true
+L["Encounter Success"] = true
+L["Screenshot Events"] = true
+L["Encounter Settings"] = true
