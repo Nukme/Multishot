@@ -1,6 +1,3 @@
-# Announcement
-**Due to the withdrawn of Blizzard games from Mainland China, I couldn't keep maintaining this project during this period. I'll be back working on this project as soon as a new deal is struck between Activision and a Chinese proxy company.**
-
 # Multishot
 Multishot is a WoW addon which could automatically take screenshots under various customizable conditions. 
 
