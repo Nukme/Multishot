@@ -217,8 +217,8 @@ function Multishot:ENCOUNTER_END(strEvent, ...)
                 solo = true
             end
             if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or
-                (inParty and Multishot.configDB.global.groupstatus["2party"]) or
-                (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then
+                    (inParty and Multishot.configDB.global.groupstatus["2party"]) or
+                    (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then
                 return
             end
             if difficultyID and not Multishot.configDB.global.difficulty[difficultyID] then
@@ -324,15 +324,27 @@ function Multishot:RefreshWatermark(show)
 end
 
 --[[
-    Wraps API f:Show() and f:Hide() 
+    Wraps API f:Show() and f:Hide()
 ]]
 
 function Multishot:ShowWatermark()
     -- Set Text
     local text = Multishot.configDB.global.watermarkformat
     local level = UnitLevel("player")
-    local zone = GetRealZoneText()
     local tdate = date()
+
+    -- 20231117 fix for nil zone string
+    local zone = " "
+    local zone1 = GetRealZoneText()
+    local zone2 = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player")).name
+
+    if zone2 then
+        zone = zone2
+    end
+
+    if zone1 then
+        zone = zone1
+    end
 
     text = text:gsub("$n", player)
     text = text:gsub("$l", level)
@@ -412,7 +424,7 @@ function Multishot:CustomScreenshot(strDebug)
     end
     if Multishot.configDB.global.played and
         (
-        strDebug == "PLAYER_LEVEL_UP" or strDebug == "ACHIEVEMENT_EARNED" or strDebug == "CHAT_MSG_SYSTEM" or
+            strDebug == "PLAYER_LEVEL_UP" or strDebug == "ACHIEVEMENT_EARNED" or strDebug == "CHAT_MSG_SYSTEM" or
             strDebug ==
             "CHAT_MSG_MONSTER_SAY" or strDebug == KEY_BINDING) and strDebug ~= "TIME_PLAYED_MSG" then
         self:RegisterEvent("TIME_PLAYED_MSG")
