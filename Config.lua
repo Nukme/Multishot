@@ -39,9 +39,9 @@ end
 
 function GetDiffDefaults()
     local pre_selected = {
-        [8] = true, -- Mythic Keystone
-        [1] = true, -- Normal Dungeon
-        [2] = true, -- Heroic Dungeon
+        [8] = true,  -- Mythic Keystone
+        [1] = true,  -- Normal Dungeon
+        [2] = true,  -- Heroic Dungeon
         [23] = true, -- Mythic Dungeon
         [24] = true, -- Timewalking Dungeon
         [14] = true, -- Normal Raid
@@ -129,7 +129,7 @@ local introOptions = {
             order = 1,
             type = "description",
             name = string.format("%s\n    %s\n\n", "|cFFFFD700" .. L["Version"] .. "|r",
-                GetAddOnMetadata("Multishot", "Version"))
+                C_AddOns.GetAddOnMetadata("Multishot", "Version"))
         },
         author = {
             order = 2,
@@ -142,7 +142,7 @@ local introOptions = {
             name = L["Github Repo"],
             width = "double",
             get = function()
-                return GetAddOnMetadata("Multishot", "X-Repository")
+                return C_AddOns.GetAddOnMetadata("Multishot", "X-Repository")
             end
         },
         feedback = {
@@ -151,7 +151,7 @@ local introOptions = {
             name = L["NGA Feedback"],
             width = "double",
             get = function()
-                return GetAddOnMetadata("Multishot", "X-NGA_Feedback")
+                return C_AddOns.GetAddOnMetadata("Multishot", "X-NGA_Feedback")
             end
         }
     }
@@ -185,7 +185,7 @@ local generalOptions = {
         },
         --[[
     guildlevelups = {
-      order = 2, 
+      order = 2,
       type = "toggle",
       name = L["guildlevelups"],
       get = function() return Multishot.configDB.global.guildlevelup end,
@@ -274,7 +274,7 @@ local generalOptions = {
     	type = "toggle",
     	name = L["garissonbuild"],
     	get = function() return Multishot.configDB.global.garissonbuild end,
-    	set = function(_,v) Multishot.configDB.global.garissonbuild = v end },  
+    	set = function(_,v) Multishot.configDB.global.garissonbuild = v end },
 	--]]
         legendaryloot = {
             order = 11,
