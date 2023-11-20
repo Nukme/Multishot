@@ -638,7 +638,7 @@ local encounterOptions = {
             type = "input",
             width = 2.5,
             get = function()
-                return "https://wowpedia.fandom.com/wiki/DifficultyID"
+                return "https://warcraft.wiki.gg/wiki/DifficultyID"
             end
         },
         party = {
