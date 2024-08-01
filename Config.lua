@@ -25,7 +25,7 @@ local GetFontSizes = function()
 end
 
 -- categorized by instance type  Nukme@20220505
-local diffcap = 300
+local diffcap = 1000
 function GetDifficulties(_T)
     local diffs = {}
     for i = 1, diffcap do
