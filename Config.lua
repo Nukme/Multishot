@@ -723,7 +723,7 @@ function Multishot:OnInitialize()
 
     -- Register Slash Command
     self:RegisterChatCommand("multishot", function()
-        InterfaceOptionsFrame_OpenToCategory(Multishot.ConfigPanel)
+        Settings.OpenToCategory(self.CategoryId)
     end)
 end
 
@@ -737,7 +737,7 @@ end
 
 function Multishot:RegisterMenus()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot", introOptions)
-    self.ConfigPanel = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot", "Multishot")
+    self.ConfigPanel, self.CategoryId = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot", "Multishot")
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("Multishot General Settings", generalOptions)
     self.GeneralSettings = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Multishot General Settings",
