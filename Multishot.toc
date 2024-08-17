@@ -1,14 +1,16 @@
 ## Interface: 110002
-## Title: Multishot Fan Update
-## Notes: Takes screenshots of memorable events in your World of Warcraft career.
+## Title: Multishot
+## IconTexture: Interface/Addons/Multishot/art/icon
+## Notes: Automatically capture screenshots of memorable events in your World of Warcraft career.
 ## Version: 11.0.2.1
-## Author: dlui & dridzt
-## X-Maintainer: Nukme 
-## X-Repository: https://github.com/Nukme/Multishot
-## X-NGA_Feedback: https://bbs.nga.cn/read.php?tid=7534350
+## Author: redhg
+## OriginalAuthor: dlui & dridzt
+## X-Maintainer: redhg
+## X-Repository: https://github.com/redhg/wow-multishot
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3
 ## SavedVariables: MultishotConfigDB, MultishotHistoryDB
 ## SavedVariablesPerCharacter: MultishotPlayerScreens
+
 
 #@no-lib-strip@
 libs\data.xml
