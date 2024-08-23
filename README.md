@@ -1,5 +1,5 @@
 # Multishot Fan Update
-**Multishot Fan Update&** is a WoW addon which could automatically take screenshots under various customizable conditions. 
+**Multishot Fan Update** is a WoW addon which could automatically take screenshots under various customizable conditions. 
 
 Use command `/multishot` in game to open the configuration panel.
 
