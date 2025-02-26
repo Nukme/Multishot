@@ -269,8 +269,7 @@ function Multishot:ISLAND_COMPLETED(strEvent, ...)
     end
 
     local mapID, winner = ...
-
-    print("mapID: " .. mapID .. ", winner: " .. winner)
+    -- print("mapID: " .. mapID .. ", winner: " .. winner)
 
     self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. mapID)
 end
