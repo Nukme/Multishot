@@ -128,10 +128,19 @@ function Multishot:UPDATE_BATTLEFIELD_STATUS(strEvent)
 end
 
 function Multishot:CHAT_MSG_SYSTEM(strEvent, strMessage)
-    if Multishot.configDB.global.repchange then
-        if string.match(strMessage, strMatch) then
-            self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
-        end
+    if not Multishot.configDB.global.repchange then
+        return
+    end
+
+    -- 20260906
+    -- guard against this lua error:
+    -- "attempt to perform string conversion on a secret string value (execution tainted by 'Multishot')"
+    if not canaccessvalue(strMessage) then
+        return
+    end
+
+    if string.match(strMessage, strMatch) then
+        self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay1, strEvent)
     end
 end
 
